@@ -1,0 +1,47 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Serviço{% endblock title %}
+
+{% block breadcrumb %}
+	<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'serviceList' %}">Lista de serviços</a></li>
+            <li class="is-active"><a>Visualizar serviços</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+
+    <div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Serviço </h2>
+		<a href="{% url 'serviceList'%}" class="button is-info"> Vista geral</a>
+	</div>
+  	<div class="section">
+	<div class="columns">
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Nome</h3>
+			<p>{{ obj.name }}</p>
+		</div>
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Descrição </h3>
+			<p>{{ obj.description }}</p>
+		</div>
+	</div>
+	<div class="columns">
+		<div class="column is-6">
+			<h3> Tipo</h3>
+			<p>{{ obj.servicestype.name }}</p>
+		</div>
+	</div>
+	<div class="columns" display="flex" style="justify-content: center">
+		<a href="{% url 'serviceEdit' obj.id %}" class="button is-info"> Alterar</a>
+	</>
+</div>
+{% endblock content%}
+

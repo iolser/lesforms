@@ -1,0 +1,202 @@
+{% extends 'app.html' %}
+
+{% block title %}- Detalhes do Evento{% endblock title %}
+
+{% block content %}
+{% load static %}
+
+{% load main_extras %}
+
+<div>
+	<div style="margin-bottom:3%;margin-top:3%">
+		  <h2 class="title is-4" style="text-align: center"> Criar/Adicionar logística do evento </h2>
+	</div>
+	<div style="display:block;text-align:center">
+		<div style="margin-bottom:2%" class="logistics-add">
+			<button id="add-service" class="button is-info" onclick="addForm(event)">Adicionar serviço</button>
+			<button id="add-equipment" class="button is-info" onclick="addForm(event)">Adicionar equipamento</button>
+			<button id="add-location" class="button is-info" onclick="addForm(event)">Adicionar localização</button>
+		</div>
+
+		<form id="form-container" method="POST" style="display:inline-block; margin-left:auto; margin-right:auto; text-align:left">
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Logistic type</th>
+						<th>Start</th>
+						<th>End</th>
+						<th>Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% csrf_token %}
+					<div id="services-form-count">
+						{{ servicesformset.management_form }}
+					</div>
+					{% for form in servicesformset %}
+					<tr class="service-form">
+						<td>Serviço</td>
+						<td>
+							<div class="select">
+								{{ form.servicestype }}
+							</div>
+						</td>
+						<td>{{ form.start }}</td>
+						<td>{{ form.end }}</td>
+						<td>{{ form.quantity }}</td>
+					</tr>
+					{% endfor %}
+				
+					<div id="equips-form-count">
+						{{ equipsformset.management_form }}
+					</div>
+					{% for form in equipsformset %}
+					<tr class="equipment-form">
+						<td>Equipamento</td>
+						<td>
+							<div class="select">
+								{{ form.typeequipment }}
+							</div>
+						</td>
+						<td>{{ form.start }}</td>
+						<td>{{ form.end }}</td>
+						<td>{{ form.quantity }}</td>
+					</tr>
+					{% endfor %}
+				
+					<div id="locations-form-count">
+						{{ locationsformset.management_form }}
+					</div>
+					{% for form in locationsformset %}
+					<tr class="location-form">
+						<td>Localização</td>
+						<td>
+							<div class="select">
+								{{ form.locationtype }}
+							</div>
+						</td>
+						<td>{{ form.start }}</td>
+						<td>{{ form.end }}</td>
+						<td>{{ form.quantity }}</td>
+					</tr>
+					{% endfor %} 
+				</tbody>
+			</table>
+
+			
+
+			<div class="submit-button" style="margin-top:7%;text-align: center;position:center;">
+				<button type="submit" class="button is-success" onclick="return confirm('Tem a certeza?');">
+					<span>Submeter</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+
+	let serviceForms = document.querySelectorAll(".service-form");
+	let equipmentForms = document.querySelectorAll(".equipment-form");
+	let locationForms = document.querySelectorAll(".location-form");
+
+	let addService = document.querySelector("#add-service");
+	let addEquipment = document.querySelector("#add-equipment");
+	let addLocation = document.querySelector("#add-location");
+	
+	let servicesTotalForms = document.getElementById("services-form-count").querySelector("#services-TOTAL_FORMS").value;
+	let equipsTotalForms = document.getElementById("equips-form-count").querySelector("#equips-TOTAL_FORMS").value;
+	let locationsTotalForms = document.getElementById("locations-form-count").querySelector("#locations-TOTAL_FORMS").value;
+
+	function addForm(e) {
+		e.preventDefault();
+		let formRegex = RegExp(`form-(\\d){1}-`,'g');
+	
+		switch(e.target.id) {
+			case 'add-service':
+				var temp = $(".service-form").first();
+				var txt = temp.html();
+				var newForm = temp.clone().appendTo(".table");
+
+				++servicesTotalForms;
+				newForm.html(txt.replace(formRegex, `form-${servicesTotalForms}-`));
+				break;
+			case 'add-equipment':
+				var temp = $(".equipment-form").first();
+				var txt = temp.html();
+				var newForm = temp.clone().appendTo(".table");
+
+				equipsTotalForms++;
+				newForm.html(txt.replace(formRegex, `form-${equipsTotalForms}-`));
+				break;
+			case 'add-location':
+				var temp = $(".location-form").first();
+				var txt = temp.html();
+				var newForm = temp.clone().appendTo(".table");
+
+				locationsTotalForms++;
+				newForm.html(txt.replace(formRegex, `form-${locationsTotalForms}-`));
+				break;
+			default:
+				console.log("Something went wrong.");
+		}
+	}
+
+	
+
+	{% comment %} legacy code, felt bad deleting it after spending so much time on it{% endcomment %}
+
+	{% comment %} $(document).ready(function() {
+
+		let id = 0;
+		$(".query-db").click(function(e) {
+			e.preventDefault();
+			var type_resource = $('#id_resource_type').val();
+			if(type_resource === 'services') {
+				$.getJSON("{% url 'get_services' %}", function(services) {
+					let array = JSON.parse(services);
+					if(!$('input[name="service"]').length) {
+						$('.inject-fields').append('<label>Selecione um serviço da lista: </label>');
+						array.forEach(function(service) {
+							$('.inject-fields').append(`<div class="field is-grouped"><label class="checkbox"><input type="checkbox" name="service" id=${service.fields.name} value=${service.pk} >&nbsp;&nbsp;${service.fields.name}</label>&nbsp;&nbsp;<label class="quantity" hidden>Quantity: <input name="quantity-service" type="number" min="1" max="20" value="1" /></label><br/></div>`);
+						});
+					}
+				});
+			}
+			else if(type_resource === 'equipment') {
+				$.getJSON("{% url 'get_equipments' %}", function(equipments) {
+					let array = JSON.parse(equipments);
+					if(!$('input[name="equipment"]').length) {
+						$('.inject-fields').append('<label>Selecione um equipamento da lista: </label>');
+						array.forEach(function(element, index) {
+							$('.inject-fields').append(`<div class="field is-grouped"><label class="checkbox"><input type="checkbox" name="equipment" id=${element.fields.name} value=${element.pk} >&nbsp;&nbsp;${element.fields.name}</label>&nbsp;&nbsp;<label class="quantity" hidden>Quantity: <input name="quantity-equipment" type="number" min="1" max="20" value="1" /></label><br/></div>`);
+						});
+					}
+				});
+			}
+			else if(type_resource === 'location') {
+				$.getJSON("{% url 'get_locations' %}", function(locations) {
+					let array = JSON.parse(locations);
+					if(!$('input[name="location"]').length) {
+						$('.inject-fields').append('<label>Selecione um espaço da lista: </label>');
+						array.forEach(function(location) {
+							$('.inject-fields').append(`<div class="field is-grouped"><label class="checkbox"><input type="checkbox" name="location" id=${location.fields.name} value=${location.pk} >&nbsp;&nbsp;${location.fields.name}</label>&nbsp;&nbsp;<label class="quantity" hidden>Quantity: <input name="quantity-location" type="number" min="1" max="20" value="1" /></label><br/></div>`);
+						});
+					}
+				});
+			}
+		});
+
+		$('.inject-fields').on('click', "input[type=checkbox]", function() {
+			if($(this).is(':checked'))
+				$(this).parent().parent().find('.quantity').toggle();
+			else
+				$(this).parent().parent().find(".quantity").toggle();
+		});
+	}) {% endcomment %}
+
+
+
+</script>
+{% endblock content %}

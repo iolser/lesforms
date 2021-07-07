@@ -1,0 +1,42 @@
+{% extends 'app.html' %}
+
+{% block title %}- Consultar Eventos{% endblock title %}
+
+{% block content %}
+
+{% load main_extras %}
+
+<div>
+	<div style="margin-bottom:3%;margin-top:3%;">
+		<h2 class="title is-4" style="text-align: center;">Criar novo evento</h2>
+	</div>
+
+	<div style="display:block;text-align:center">
+		<form method="POST" style="display:inline-block; margin-left:auto; margin-right:auto; text-align:left">
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+				<div class="columns">
+					<div class="column">  
+						<div class="field is-grouped">
+							<label class="label">{{ field.label_tag }}</label>
+							<div class="control">
+								{{field}}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+			{% for field in form.hidden_fields %}
+				{{field}}
+			{% endfor %}
+			<div style="margin-top:7%;text-align: center;position:center;">
+				<button type="submit" class="button is-success is-outlined" onclick="return confirm('Tem a certeza?');">
+					<span>Submeter</span>
+				</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+{% endblock content %}

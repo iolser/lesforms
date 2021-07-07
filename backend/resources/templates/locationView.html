@@ -1,0 +1,59 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Espaço{% endblock title %}
+{% block breadcrumb %}
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'locationList' %}">Lista de espaços</a></li>
+            <li class="is-active"><a>Visualizar espaço</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+
+    <div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Espaço </h2>
+		<a href="{% url 'locationList'%}" class="button is-info"> Vista geral</a>
+	</div>
+  	<div class="section">
+	<div class="columns">
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Nome</h3>
+			<p>{{ obj.name }}</p>
+		</div>
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Tipo </h3>
+			<p>{{ obj.locationtype.name }}</p>
+		</div>
+	</div>
+	<div class="columns">
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Edificio</h3>
+			<p>{{ obj.building.name }}</p>
+		</div>
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Campus </h3>
+			<p>{{ obj.campus.name }}</p>
+		</div>
+	</div>
+	<div class="columns">
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Lotação máxima</h3>
+			<p>{{ obj.maxcapacity }}</p>
+		</div>
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Lotação máxima para necessidades especiais </h3>
+			<p>{{ obj.maxspecialneedscapacity }}</p>
+		</div>
+	</div>
+	<div class="columns" display="flex" style="justify-content: center">
+		<a href="{% url 'locationEdit' obj.id %}" class="button is-info"> Alterar</a>
+	</div>
+</div>
+{% endblock content%}
+

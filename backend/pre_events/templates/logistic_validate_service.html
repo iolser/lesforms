@@ -1,0 +1,84 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Validar{% endblock title %}
+
+{% block breadcrumb %}
+
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+	<ul>
+		<li><a href="{% url 'index' %}">Início</a></li>
+		<li><a href="{% url 'admin_events' %}">Lista de Eventos</a></li>
+		<li><a href="{% url 'view_event_logistic' event.id %}">Lista da logistica de um evento</a></li>
+		<li><a href="{% url 'event_logistic_list' event.id %}">Lista de atribuições de um evento</a></li>
+		<li class="is-active"><a>Atribuir um serviço</a></li>
+	</ul>
+</nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+
+{% load main_extras %}
+
+<div>
+    <div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Atribuir logistica </h2>
+	</div>
+  	<div class="section">
+    <form method="POST" action="">{% csrf_token %}
+		<div class="columns" display="flex" style="text-align: center">
+			 <div class="column is-6" style="margin: 0 auto">
+				<div class="select is-info" style="margin-top: 1%">
+					<select id = "service" name="service">
+						<option selected disabled> --   Serviço   -- </option>
+						{% for service in services %}
+							<option name="{{ service.name }}" value="{{ service.id }}" > {{ service.name }} </option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="columns" display="flex" style="text-align: center">
+			 <div class="column is-6" style="margin: 0 auto">
+				<span> Data de inicio </span>
+				{% comment %} <div class="input-group date" id="datetimepicker1" data-target-input="nearest"> {% endcomment %}
+					{{ form.start }}
+					{% comment %} <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+						<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+					</div> {% endcomment %}
+				</div>
+			</div>
+		</div>
+	    <div class="columns" display="flex" style="text-align: center">
+			 <div class="column is-6" style="margin: 0 auto">
+				<span> Data de fim </span>
+        	    <label> {{ form.end }} </label>
+     		</div>
+		</div>
+	    <div class="columns" style="margin-top: 2%">
+			<button type="submit" onclick="return confirm('Tem a certeza?');" class="button is-info is-outlined" style="margin: 0 auto ">
+				<span>Inserir</span>
+			</button>
+		</div>
+
+    </form>
+  </div>
+</div>
+
+
+{% comment %} <script>
+  $(function () {
+    $("#datetimepicker1").datetimepicker({
+      format: 'DD/MM/YYYY HH:mm',
+    });
+  });
+</script> {% endcomment %}
+
+{% endblock content%}
+{% comment %} 
+{% block scripts %}
+<script src="~bulma-calendar/dist/js/bulma-calendar.min.js"></script>
+{% endblock scripts %} {% endcomment %}
+

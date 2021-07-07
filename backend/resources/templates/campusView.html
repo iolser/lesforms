@@ -1,0 +1,38 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Campus{% endblock title %}
+
+{% block breadcrumb %}
+	<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'campusList' %}">Lista de Campus</a></li>
+            <li class="is-active"><a>Visualizar Campus</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+
+	
+    <div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Campus </h2>
+		<a href="{% url 'campusList'%}" class="button is-info"> Vista geral</a>
+	</div>
+  	<div class="section">
+	<div class="columns">
+		<div class="column is-6" style="margin: 0 auto">
+			<h3> Nome do Campus </h3>
+			<p>{{ obj.name }}</p>
+		</div>
+	</div>
+	<div class="columns" display="flex" style="justify-content: center">
+		<a href="{% url 'campusEdit' obj.id %}" class="button is-info"> Alterar</a>
+	</div>
+</div>
+{% endblock content%}
+

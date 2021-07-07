@@ -1,0 +1,58 @@
+{% extends 'app.html' %}
+
+{% block title %}- Consultar Inscrições{% endblock title %}
+
+{% block content %}
+
+<div>
+	<div style="margin-bottom:3%;margin-top:3%">
+		<h2 class="title is-4"style="text-align: center"> Consulta das suas inscrições </h2>
+	</div>
+	<table class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th><strong> Nome </strong> </th>
+				<th><strong> Descrição </strong> </th>
+				<th><strong> Estado </strong> </th>
+				<th><strong> Início </strong> </th>
+				<th><strong> Fim </strong> </th>
+				<th><strong> Tipo de evento </strong> </th>
+				<th><strong> Organizador </strong> </th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for answer, feedback in answers %}
+				<tr>
+					{% if answer.event.id and answer.form.type.id == 1 %}
+						<th style="font-weight: normal"> {{ answer.event.name }}</th>
+						<th style="font-weight: normal"> {{ answer.event.description }}</th>
+						{% if answer.event.state == 0 %}
+							<th style="font-weight: normal"> Pendente </th>
+						{% else %}
+							<th style="font-weight: normal"> Validado </th>
+						{% endif %}
+						<th style="font-weight: normal"> {{ answer.event.start }}</th>
+						<th style="font-weight: normal"> {{ answer.event.end }}</th>
+						<th style="font-weight: normal"> {{ answer.event.eventtype.name }}</th>
+						<th style="font-weight: normal"> {{ answer.event.organizer.generaluser_ptr.user_ptr.username }}</th>
+						<th style="text-align: right"> <a class="btn-primary" href="{% url 'event_details' answer.event.id %}"> <span>Detalhes</span> </a> </th>
+						<th style="text-align: right"> <a class="check btn-primary" href="/forms/edit_response/{{answer.id}}"> <span>Alterar</span> </a> </th>
+						<th style="text-align: right"> <a class="check btn-primary" href="{% url 'cancel_registration' answer.event.id %}" onclick="return confirm('Tem a certeza que quer cancelar esta inscrição?');"> <span>Cancelar</span> </a> </th>
+						{% if answer.event.formfeedbackid.type.id == 3 %}
+							{% if feedback or feedback.event.end <= today %} {% comment "" %}dis work?{% endcomment %}
+								<th style="text-align: right"> <span>Feedback</span> </th>
+							{% else %}
+								<th style="text-align: right"> <a class="btn-primary" href="/forms/respond/{{answer.event.formfeedbackid.id}}/?event={{answer.event.id}}"> <span>Feedback</span> </a> </th>
+							{% endif %}
+						{% endif %}
+						
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock content %}

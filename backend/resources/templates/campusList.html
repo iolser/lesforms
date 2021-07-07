@@ -1,0 +1,75 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Campus List{% endblock title %}
+
+{% block breadcrumb %}
+	<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li class="is-active"><a>Lista de Campus</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+
+	<div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Campus </h2>
+	</div>
+	<table id="example" class="table is-striped" style="width:100%">
+		<thead>
+			<tr>
+				<th><strong> Nome </strong> </th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for campus in query  %}
+			<tr>
+					<th style="font-weight: normal"> {{ campus.name }}</th>
+					<th style="text-align: right">
+					<div>
+						<a class="button btn-primary" style="margin-right: 20px" href="{% url 'campusView' campus.id %}">
+							<span >Detalhes</span>
+						</a>
+					 	<a class="button is-warning btn-primary" style="margin-right: 20px" href="{% url 'campusEdit' campus.id %}">
+							<span >Editar</span>
+						</a>
+
+						<a class="button is-danger btn-primary" onclick="return confirm('Tem a certeza?');" href="{% url 'campusDelete' campus.id %}">
+							<span>Eliminar</span>
+						</a>
+					</div>
+					</th>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div style="display:block; text-align:center; margin-top:5%">
+	<a style="background: #7CFC00; margin: 0 auto; display:inline-block; border-width: thin;"class="button btn-primary" href="{% url 'campus' %}">
+		<span style="margin: 0 auto"><strong>Adicionar</strong></span>
+	</a>
+</div>
+
+<script>
+ $(document).ready(function () {
+    $('#example').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      }
+    });
+  });
+</script>
+
+{% endblock content%}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock scripts %}

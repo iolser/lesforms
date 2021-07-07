@@ -1,0 +1,49 @@
+{% extends 'app.html' %}
+
+
+
+{% block title %}- {{message}}{% endblock title %}
+
+
+
+{% block content %}
+
+        <div style="margin-top:5%">
+
+            {% if message.tags == 'success'%}
+                <article class="message is-success">
+                    <div class="message-body">
+                    <p style="text-align: center;">
+                    <strong>{{message}}</strong>
+                    </p>
+                    </div>
+                </article>
+            {% elif message.tags == 'info'%}
+                <article class="message is-info">
+                    <div class="message-body">
+                    <p style="text-align: center;">
+                    <strong>{{message}}</strong>
+                    </p>
+                    </div>
+                </article>
+            {% elif message.tags == 'warning'%}
+                <article class="message is-warning">
+                    <div class="message-body">
+                    <p style="text-align: center;">
+                    <strong>{{message}}</strong>
+                    </p>
+                    </div>
+                </article> 
+            {% elif message.tags == 'error'%}
+                <article class="message is-danger">
+                    <div class="message-body">
+                    <p style="text-align: center;">
+                    <strong>{{message}}</strong>
+                    </p>
+                    </div>
+                </article>  
+            {% endif %}
+        </div>
+    {% endblock content %}
+
+</div>

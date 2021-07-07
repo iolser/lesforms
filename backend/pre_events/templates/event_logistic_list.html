@@ -1,0 +1,89 @@
+{% extends 'app.html' %}
+
+{% block title %}- Detalhes do Evento{% endblock title %}
+
+{% block breadcrumb %}
+
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+	<ul>
+		<li><a href="{% url 'index' %}">Início</a></li>
+		<li><a href="{% url 'admin_events' %}">Lista de Eventos</a></li>
+		<li><a href="{% url 'view_event_logistic' event.id %}">Lista da logistica de um evento</a></li>
+		<li class="is-active"><a>Lista de atribuições de um evento</a></li>
+	</ul>
+</nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+{% load static %}
+
+{% load main_extras %}
+
+<div>
+	
+
+	<div style="margin-bottom:3%;margin-top:3%">
+        <h2 class="title is-4" style="text-align: center"> Logística atribuída do evento </h2>
+		<a href="{% url 'view_event_logistic' event.id %}" class="button is-info"> Pedidos de logistica</a>
+	</div>
+
+	<table id="example" class="table is-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th><strong> Nome </strong> </th>
+                <th><strong> Início de uso </strong> </th>
+                <th><strong> Fim de uso </strong> </th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                    <td style="font-weight: normal"> {{ service.service.name }}</td>
+					<td style="font-weight: normal"> {{ service.start }}</td>
+					<td style="font-weight: normal"> {{ service.end }}</td>
+                    <td style="text-align: right"> <a class="btn-primary" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_attrib_service' service.id %}"> <span>Eliminar</span> </a> </td>
+            </tr>
+            {% endfor %}
+
+			{% for equipment in equipments  %}
+            <tr>
+                    <td style="font-weight: normal"> {{ equipment.item.name }}</td>
+					<td style="font-weight: normal"> {{ equipment.start }}</td>
+					<td style="font-weight: normal"> {{ equipment.end }}</td>
+                    <td style="text-align: right"> <a class="btn-primary" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_attrib_equipment' equipment.id %}"> <span>Eliminar</span> </a> </td>
+            </tr>
+            {% endfor %}
+
+			{% for location in locations  %}
+            <tr>
+					<td style="font-weight: normal"> {{ location.location.name }}</td>
+					<td style="font-weight: normal"> {{ location.start }}</td>
+					<td style="font-weight: normal"> {{ location.end }}</td>
+                    <td style="text-align: right"> <a class="button is-danger" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_attrib_location' location.id %}"> <span>Eliminar</span> </a> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+ $(document).ready(function () {
+    $('#example').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      }
+    });
+  });
+</script>
+
+
+{% endblock content%}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock scripts %}

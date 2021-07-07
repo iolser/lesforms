@@ -1,0 +1,98 @@
+{% extends 'app.html' %}
+
+{% block title %}- Detalhes do Evento{% endblock title %}
+
+{% block content %}
+
+{% load main_extras %}
+
+<style>
+	h4 {
+		font-weight: normal
+	}
+</style>
+<div>
+	<div style="margin-bottom:3%;margin-top:3%">
+        <h2 class="title is-4" style="text-align: center"> Detalhes do evento:  {{ event.name }} </h2>
+	</div>
+	<div class="columns">
+		<div class="column">
+			<h4><strong>Nome: </strong>{{ event.name }}</h4>
+			<h4><strong>Descrição: </strong>{{ event.description }}</h4>
+			<h4><strong>Data de início: </strong>{{ event.start }}</h4>
+			<h4><strong>Data de fim: </strong>{{ event.end }}</h4>
+			<h4><strong>Tipo de evento: </strong>{{ event.eventtype.name }}</h4>
+			{% if event.state == 0 %}
+				<h4><strong>Estado: </strong>Aguardando preenchimento do formulário do evento</h4>
+			{% elif event.state == 1 %}
+				<h4><strong>Estado: </strong>Aguardando validação do formulário do evento</h4>
+			{% elif event.state == 2 %}
+				<h4><strong>Estado: </strong>Aguardando criação do formulário do evento</h4>
+			{% elif event.state == 3 %}
+				<h4><strong>Estado: </strong>Aguardando validação da logística do evento</h4>
+			{% elif event.state == 4 %}
+				<h4><strong>Estado: </strong>Logística do evento validada</h4>
+			{% else %}
+				<h4><strong>Estado: </strong>Evento acabou. Pode submeter feedback.</h4>
+			{% endif %}
+		</div>
+		<div class="column">
+			{% if event.state == 0 %}
+				{% if request.user|has_group:'proponent' %}
+					<a href="/forms/respond/{{form.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Preencher formulário do evento</span>
+					</a>
+				{% endif %}
+			{% elif event.state == 1 %}
+				{% if request.user|has_group:'proponent' or request.user|has_group:'administrator' %}
+					<a href="/forms/validate/{{form.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Validar formulário do evento</span>
+					</a>
+				{% endif %}
+
+				{% if request.user|has_group:'proponent' %}
+					<a href="/forms/edit_response/{{proposal.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Editar formulário do evento</span>
+					</a>
+				{% endif %}
+			{% elif event.state == 2 %}
+				{% if request.user|has_group:'proponent' %}
+					<a href="{% url 'event_logistics_form' event.id %}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Criar logística do evento</span>
+					</a>
+				{% endif %}
+			{% elif event.state == 3 %}
+				{% if request.user|has_group:'proponent' or request.user|has_group:'administrator' %}
+					<a href="{% url 'view_event_logistic' event.id %}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Ver logística do evento</span>
+					</a>
+				{% endif %}
+			{% elif event.state == 4 %}
+				{% if request.user|has_group:'participant' %}
+					<a href="/forms/respond/{{event.formsignupid.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Inscrever-me</span>
+					</a>
+				{% endif %}
+			{% else %}
+				{% if request.user|has_group:'participant' %}
+					<a href="/forms/respond/{{event.formfeedbackid.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Fornecer feedback</span>
+					</a>
+				{% endif %}
+			{% endif %}
+				{% if request.user|has_group:'proponent' or request.user|has_group:'administrator' %}
+					<a href="/forms/responses/{{event.formsignupid.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Participantes</span>
+					</a>
+					<a href="{% url 'end_event' event.id %}" class="button is-danger is-outlined" style="display:block;margin: 0 auto ">
+						<span>Terminar evento</span>
+					</a>
+					<a href="/forms/responses/{{event.formfeedbackid.id}}/?event={{event.id}}" class="button is-info is-outlined" style="display:block;margin: 0 auto ">
+						<span>Consultar feedback</span>
+					</a>
+				{% endif %}
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

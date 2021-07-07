@@ -1,0 +1,75 @@
+
+{% extends 'app.html' %}
+
+{% block title %}equipamento{% endblock title %}
+{% block breadcrumb %}
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'itemList' %}">Lista de equipamentos</a></li>
+            <li class="is-active"><a>Editar equipamento</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+	
+
+    <div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Equipamento </h2>
+	</div>
+  	<div class="section">
+    <form method="POST" action="" novalidate>{% csrf_token %}
+	    <div class="columns">
+    	    <div class="column is-6" style="margin: 0 auto">
+				<span> Nome do equipamento </span>
+        	    <label value="query.name"> {{ form.name }} </label>
+     		</div>
+		</div>
+		<div class="columns">
+			 <div class="column is-6" style="margin: 0 auto">
+				<span> Numero de série </span>
+        	    <label> {{ form.serialnum }} </label>
+     		</div>
+	    </div>
+		<div class="columns" style="justify-content: center">
+            <div class="column is-6" style="display : flex; justify-content: center">
+                <div class="select is-info" style="margin-top: 1%">
+                    <select id = "typeequipment" name="typeequipment">
+                    {% comment %} <option> </option> {% endcomment %}
+                        <option selected disabled> --   Tipo de equipamento   -- </option>
+                        {% for equipmenttype in equipmenttypes %}
+                            <option name="{{ equipmenttype.1 }}" value="{{ equipmenttype.0 }}" > {{ equipmenttype.1 }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+    	    </div>
+    	</div>
+	    <div class="columns" style="margin-top: 2%">
+			<button type="submit" class="button is-info is-outlined" onclick="return confirm('Tem a certeza?');" style="margin: 0 auto ">
+				<span>Inserir</span>
+			</button>
+		</div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$("#typeequipment > option").each(function(){
+			if({{selected_id}} == this.value){
+				$(this).attr("selected", "selected");
+				console.log(this.text + ' ' + this.value);
+			}
+			else{
+				$(this).removeAttr("selected");
+			}
+		})
+	});
+</script>
+
+{% endblock content%}
+

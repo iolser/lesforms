@@ -1,0 +1,52 @@
+
+{% extends 'app.html' %}
+
+{% block title %}- Página Inicial{% endblock title %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+        <ul>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'equipmentList' %}">Lista de tipos de equipamento</a></li>
+            <li class="is-active"><a>Adicionar tipo de equipamento</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block content %}
+{% comment %} {% load configuracao_tags %} {% endcomment %}
+{% load static %}
+<div>
+
+
+	<div style="margin-bottom:3%;margin-top:3%">
+    	<h2 class="title is-4"style="text-align: center"> Tipo de Equipamento </h2>
+	</div>
+  	<div class="section">
+    <form method="POST" action="equipment" novalidate>{% csrf_token %}
+	    <div class="columns">
+    	    <div class="column is-6" style="margin: 0 auto">
+				<span> Nome do tipo de equipamento </span>
+					
+					<label>{{ form.name }}</label>
+        	    {% comment %} <input name="{{equipmentName}}" class="input" type="text" id="equipmentName" required="true"> {% endcomment %}
+                {% comment %} <div style="margin-top:7%;text-align: center;position:center;"></div> {% endcomment %}
+     		</div>
+    	</div>
+		<div class="columns">
+    	    <div class="column is-6" style="margin: 0 auto">
+				<span> URL da imagem </span>
+        	    <input name="imageURL" class="input" type="text" id="imageURL" required="false">
+                {% comment %} <div style="margin-top:7%;text-align: center;position:center;"></div> {% endcomment %}
+     		</div>
+    	</div>
+		<div class="columns">
+			<button type="submit" onclick="return confirm('Tem a certeza?');" class="button is-info is-outlined" style="margin: 0 auto">
+				<span>Inserir</span>
+			</button>
+		</div>
+    </form>
+  </div>
+</div>
+{% endblock content%}
+

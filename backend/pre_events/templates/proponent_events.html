@@ -1,0 +1,65 @@
+{% extends 'app.html' %}
+
+{% block title %}- Consultar Inscrições{% endblock title %}
+
+{% block content %}
+
+{% load main_extras %}
+
+<div>
+	<div style="margin-bottom:3%;margin-top:3%">
+		<h2 class="title is-4"style="text-align: center"> Consulta de eventos </h2>
+	</div>
+	<table id="example" class="table is-fullwidth">
+		<thead>
+			<tr>
+				<th><strong> Nome </strong> </th>
+				<th><strong> Descrição </strong> </th>
+				<th><strong> Estado </strong> </th>
+				<th><strong> Início </strong> </th>
+				<th><strong> Fim </strong> </th>
+				<th><strong> Tipo de evento </strong> </th>
+				<th><strong> Organizador </strong> </th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for event in events  %}
+				<tr>
+					<td style="font-weight: normal"> {{ event.name }}</td>
+					<td style="font-weight: normal"> {{ event.description }}</td>
+					{% if event.state == 0 %}
+						<td style="font-weight: normal"> Pendente </td>
+					{% else %}
+						<td style="font-weight: normal"> Validado </td>
+					{% endif %}
+					<td style="font-weight: normal"> {{ event.start }}</td>
+					<td style="font-weight: normal"> {{ event.end }}</td>
+					<td style="font-weight: normal"> {{ event.eventtype.name }}</td>
+					<td style="font-weight: normal"> {{ event.organizer.generaluser_ptr.user_ptr.username }}</td>
+					<td style="text-align: right"> <a class="btn-primary" href="{% url 'event_details' event.id %}"> <span>Detalhes</span> </a> </td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+<script>
+ $(document).ready(function () {
+    $('#example').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      }
+    });
+  });
+</script>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock scripts %}

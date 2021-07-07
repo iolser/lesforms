@@ -1,0 +1,178 @@
+{% extends 'app.html' %}
+
+{% block title %}- Detalhes do Evento{% endblock title %}
+
+{% block breadcrumb %}
+
+<nav aria-label="breadcrumbs" class="breadcrumb box">
+	<ul>
+		<li><a href="{% url 'index' %}">Início</a></li>
+		<li><a href="{% url 'admin_events' %}">Lista de Eventos</a></li>
+		<li class="is-active"><a>Lista da logistica de um evento</a></li>
+	</ul>
+</nav>
+
+{% endblock breadcrumb %}
+
+{% block content %}
+
+{% load static %}
+
+{% load main_extras %}
+
+<div>
+	
+
+	<div style="margin-bottom:3%;margin-top:3%">
+        <h2 class="title is-4" style="text-align: center"> Pedidos de logística do evento </h2>
+		<a href="{% url 'event_logistics_form' event.id %}"  class="button is-success">Adicionar logística</a>
+		<a href="{% url 'delete_event_logistic' event.id %}" onclick="return confirm('Tem a certeza?');" class="button is-danger">
+		Eliminar logística</a>
+		<a href="{% url 'event_logistic_list' event.id %}" class="button is-info">
+			Ver Atribuições</a>
+		<a style="flex:right" href="{% url 'validate_logistics' event.id %}" onclick="return confirm('Tem a certeza?');" class="button is-warning"> Validar Logística do Evento</a>
+	</div>
+
+
+	<table id="example" class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th><strong> Nome </strong> </th>
+                <th><strong> Descrição </strong> </th>
+                <th><strong> Início de uso </strong> </th>
+                <th><strong> Fim de uso </strong> </th>
+                <th><strong> Quantidade </strong> </th>
+                <th><strong> Válido </strong> </th>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services  %}
+				<tr>
+						<td style="font-weight: normal"> {{ service.servicestype.name }}</td>
+						<td style="font-weight: normal"> {{ service.servicestype.description }}</td>
+						<td style="font-weight: normal"> {{ service.start }}</td>
+						<td style="font-weight: normal"> {{ service.end }}</td>
+						<td style="font-weight: normal"> {{ service.quantity }}</td>
+						<td style="font-weight: normal">
+						{% if service.valid %}
+							&check;
+						{% else %}
+							&cross;
+						{% endif %}
+						</td>
+						{% if service.valid %}
+							{% if request.user|has_group:'administrator' %}
+								<td style="text-align: right"> <a class="button is-success is-outlined" href="{% url 'attrib_service' service.id %}"> <span>Atribuir</span> </a> </td>
+								<td style="text-align: right"> <a class="button is-warning is-outlined" href="{% url 'invalidate_service' service.id %}"> <span>Invalidar</span> </a> </td>
+							{% else %}
+								<td></td>
+								<td></td>
+							{% endif %}
+						{% else %}
+							<td></td>
+							{% if request.user|has_group:'administrator' %}	
+								<td style="text-align: right"> <a class="button is-success" onclick="return confirm('Tem a certeza?');" href="{% url 'validate_service' service.id %}"> <span>Validar</span> </a> </td>
+							{% else %}
+								<td></td>
+							{% endif %}
+						{% endif %}
+						<td style="text-align: right"> <a class="button is-warning" href="{% url 'change_logistic_service' service.id %}"> <span>Alterar</span> </a> </td>
+						<td style="text-align: right"> <a class="button is-danger" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_service' service.id event.id %}"> <span>Eliminar</span> </a> </td>
+				</tr>
+            {% endfor %}
+
+			{% for equipment in equipments  %}
+            <tr>
+                    <td style="font-weight: normal"> {{ equipment.typeequipment.name }}</td>
+					<td style="font-weight: normal"> {{ equipment.typeequipment.image }}</td>
+					<td style="font-weight: normal"> {{ equipment.start }}</td>
+					<td style="font-weight: normal"> {{ equipment.end }}</td>
+					<td style="font-weight: normal"> {{ equipment.quantity }}</td>
+					<td style="font-weight: normal">
+					{% if equipment.valid %}
+							&check;
+						{% else %}
+							&cross;
+						{% endif %}
+					</td>
+                    {% if equipment.valid %}
+						{% if request.user|has_group:'administrator' %}
+							<td style="text-align: right"> <a class="button is-success is-outlined" href="{% url 'attrib_equipment' equipment.id %}"> <span>Atribuir</span> </a> </td>
+							<td style="text-align: right"> <a class="button is-warning is-outlined" href="{% url 'invalidate_equipment' equipment.id %}"> <span>Invalidar</span> </a> </td>
+						{% else %}
+							<td></td>
+							<td></td>
+						{% endif %}
+					{% else %}
+						<td></td>
+						{% if request.user|has_group:'administrator' %}
+							<td style="text-align: right"> <a class="button is-success" onclick="return confirm('Tem a certeza?');" href="{% url 'validate_equipment' equipment.id %}"> <span>Validar</span> </a> </td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					{% endif %}
+                    <td style="text-align: right"> <a class="button is-warning" href="{% url 'change_logistic_equipment' equipment.id %}"> <span>Alterar</span> </a> </td>
+                    <td style="text-align: right"> <a class="button is-danger" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_equipment' equipment.id event.id %}"> <span>Eliminar</span> </a> </td>
+            </tr>
+            {% endfor %}
+
+			{% for location in locations  %}
+            <tr>
+                    <td style="font-weight: normal"> {{ location.locationtype.name }}</td>
+					<td style="font-weight: normal"> {{ location.locationtype.description }}</td>
+					<td style="font-weight: normal"> {{ location.start }}</td>
+					<td style="font-weight: normal"> {{ location.end }}</td>
+					<td style="font-weight: normal"> {{ location.quantity }}</td>
+					<td style="font-weight: normal">
+						{% if location.valid %}
+							&check;
+						{% else %}
+							&cross;
+						{% endif %}
+					</td>
+					{% if location.valid %}
+						{% if request.user|has_group:'administrator' %}
+							<td style="text-align: right"> <a class="button is-success is-outlined" href="{% url 'attrib_location' location.id %}"> <span>Atribuir</span> </a> </td>
+							<td style="text-align: right"> <a class="button is-warning is-outlined" href="{% url 'invalidate_location' location.id %}"> <span>Invalidar</span> </a> </td>
+						{% else %}
+							<td></td>
+							<td></td>
+						{% endif %}
+					{% else %}
+						<td></td>
+						{% if request.user|has_group:'administrator' %}
+							<td style="text-align: right"> <a class="button is-success" onclick="return confirm('Tem a certeza?');" href="{% url 'validate_location' location.id %}"> <span>Validar</span> </a> </td>
+						{% else %}
+							<td></td>
+						{% endif %}
+					{% endif %}
+                    <td style="text-align: right"> <a class="button is-warning" href="{% url 'change_logistic_location' location.id %}"> <span>Alterar</span> </a> </td>
+                    <td style="text-align: right"> <a class="button is-danger" onclick="return confirm('Tem a certeza?');" href="{% url 'delete_location' location.id event.id %}"> <span>Eliminar</span> </a> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+ $(document).ready(function () {
+    $('#example').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese.json"
+      }
+    });
+  });
+</script>
+
+{% endblock content %}
+
+{% block scripts %}
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/dataTables.bulma.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+{% endblock scripts %}

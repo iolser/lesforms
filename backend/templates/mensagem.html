@@ -1,0 +1,27 @@
+
+{% load static %}
+
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}        
+                <article class="message is-{{message.tags}}" id="mensagem">
+                    <div class="message-body">
+                        <p style="text-align: center;">
+                            <strong>{{message}}</strong>
+                        </p>
+                    </div>
+                </article>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
+
+  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+
+  <script>
+	if ($('#mensagem').length > 0){
+        $('#mensagem').click(function(){
+			$('#mensagem').remove();
+		});
+    }
+  </script>
