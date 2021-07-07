@@ -188,15 +188,29 @@ def location(request):
 		loctype = request.POST.get("locationtype")
 		campus = request.POST.get("campus")
 		building = request.POST.get("building")
+		maxcapacity = request.POST.get("maxcapacity")
+		maxspecialneedscapacity = request.POST.get("maxspecialneedscapacity")
+		
+		
+		# nao brinques
 
-		print(campus)
+
 
 		novo = Campus.objects.get(id = campus)
 		novo2 = Locationtype.objects.get(id = loctype)
+		form.instance.name = request.POST.get("name")
 		form.instance.campus = novo
 		form.instance.locationtype = novo2
 		form.instance.building = Building.objects.get(id=building)
-		if form.instance.maxcapacity < form.instance.maxspecialneedscapacity:
+		form.instance.maxcapacity = maxcapacity
+
+		form.instance.maxspecialneedscapacity = maxspecialneedscapacity
+		
+		print("oi")
+		
+		print(form.instance.maxcapacity)
+		print(form.instance.maxspecialneedscapacity)
+		if form.instance.maxcapacity > form.instance.maxspecialneedscapacity:
 			if form.is_valid():
 				if(building is not None):
 					obj = Location(name = form.instance.name, locationtype=form.instance.locationtype, building = form.instance.building ,campus = form.instance.campus, maxcapacity = form.instance.maxcapacity, maxspecialneedscapacity = form.instance.maxspecialneedscapacity)
@@ -223,11 +237,14 @@ def locationEdit(request, id):
 	
 	obj = Location.objects.get(id=id)
 	
-
+  
 	if request.method == 'POST':
 
 		form = locationForm(request.POST, instance=obj)
-
+		
+		print("oi")
+		print(form.instance.maxcapacity)
+		
 		loctype = request.POST.get("locationtype")
 		campus = request.POST.get("campus")
 		building = request.POST.get("building")
@@ -236,7 +253,9 @@ def locationEdit(request, id):
 		form.instance.locationtype = Locationtype.objects.get(id = loctype)
 		form.instance.building = Building.objects.get(id=building)
 
-		if form.instance.maxcapacity < form.instance.maxspecialneedscapacity:
+		
+
+		if form.instance.maxcapacity > form.instance.maxspecialneedscapacity:
 			if form.is_valid():
 				if(building is not None):
 					obj = form.save(commit=False)
